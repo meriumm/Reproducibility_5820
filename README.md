@@ -1,12 +1,28 @@
-# Coding Challenge 3
+---
+title: "Coding Challenge. 4"
+author: "Maryam Saeed Noor Fatima"
+date: "2025-02-25"
+output:
+  pdf_document: default
+  html_document: 
+   toc: true
+   toc_float: true
+  word_document: default
+  md_document:
+    variant: gfm
+---
+
+# R Markdown coding Challenge.4
 
 ## **Q.No.3 (a)**
 
 ### Readme file link
+```{r}
+library(knitr)
+```
 
-`{r} library(knitr)`
+[link to my Markdown fil](markdown_file/coding-challenge_4-Reproducibility.md)
 
-[link to my Markdown file](CodingChallenge4/Coding-challenge.4.md)
 
 ### Clickable Link to the Manuscript
 
@@ -14,72 +30,116 @@
 
 ## **Q.No.6 (b)**
 
-## File Tree of Github
+## File Tree of Github 
+```{r}
+ fs::dir_tree()
+```
 
-`{r}  fs::dir_tree()`
 
 ### Libraries
 
-`{r} library(readr) library(ggplot2) library(tidyverse) library(ggpubr) library(ggrepel)  cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73",                 "#F0E442", "#0072B2", "#D55E00", "#CC79A7")`
+```{r}
+library(readr)
+library(ggplot2)
+library(tidyverse)
+library(ggpubr)
+library(ggrepel) 
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73",
+                "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+```
 
 ## **Q.No.3 (b)**
-
 ### Importing the excel file
+```{r}
+Mycotoxin_Data <- read.csv("MycotoxinData.csv",na = "na")
+```
 
-`{r} Mycotoxin_Data <- read.csv("MycotoxinData.csv",na = "na")`
 
 ## **Q.No.3 (c) **
 
-### Changing the factor levels
+###  Changing the factor levels
+```{r}
+Mycotoxin_Data$Treatment <- factor(Mycotoxin_Data$Treatment, levels = c("NTC", "Fg", "Fg + 37", "Fg + 40", "Fg + 70"))
+```
 
-`{r} Mycotoxin_Data$Treatment <- factor(Mycotoxin_Data$Treatment, levels = c("NTC", "Fg", "Fg + 37", "Fg + 40", "Fg + 70"))`
 
 # Appling Statistics using t test
 
 ## a.
 
-\`\`\`{r} DONplot.pwc \<- ggplot(Mycotoxin_Data, aes(x = Treatment, y =
-DON, fill = Cultivar)) + geom_boxplot(outliers = F) + xlab(““) +
-ylab(”DON (ppm)“) + geom_point(alpha = 0.6, pch = 21, color =”black”,
-position = position_jitterdodge()) + scale_color_manual(values =
-c(cbbPalette\[3\], cbbPalette\[4\])) + scale_fill_manual(values =
-c(cbbPalette\[3\], cbbPalette\[4\])) + theme_classic() +
-facet_wrap(~Cultivar) + stat_compare_means(method = “t.test”, label =
-“p.signif”, comparisons = list(c(“NTC”, “Fg”), c(“Fg”, “Fg + 37”),
-c(“Fg + 37”, “Fg + 40”), c(“Fg + 40”, “Fg + 70”)))
+```{r}
+DONplot.pwc <- ggplot(Mycotoxin_Data, aes(x = Treatment, y = DON, fill = Cultivar)) +
+  geom_boxplot(outliers = F) + 
+  xlab("") + 
+  ylab("DON (ppm)") + 
+  geom_point(alpha = 0.6, pch = 21, color = "black", position = position_jitterdodge()) +
+  scale_color_manual(values = c(cbbPalette[3], cbbPalette[4])) +
+  scale_fill_manual(values = c(cbbPalette[3], cbbPalette[4])) +
+  theme_classic() +
+  facet_wrap(~Cultivar) +
+  stat_compare_means(method = "t.test", label = "p.signif", 
+                     comparisons = list(c("NTC", "Fg"), 
+                                        c("Fg", "Fg + 37"), 
+                                        c("Fg + 37", "Fg + 40"), 
+                                        c("Fg + 40", "Fg + 70")))
 
 DONplot.pwc
 
 
-    ## b. 
+```
 
-    ```{r}
-    X15ADONplot.pwc <- ggplot(Mycotoxin_Data, aes(x = Treatment, y = X15ADON, fill = Cultivar)) +
-      geom_boxplot(outliers = F) + 
-      xlab("") + 
-      ylab("15ADON") + 
-      geom_point(alpha = 0.6, pch = 21, color = "black", position = position_jitterdodge()) +
-      scale_color_manual(values = c(cbbPalette[3], cbbPalette[4])) +
-      scale_fill_manual(values = c(cbbPalette[3], cbbPalette[4])) +
-      theme_classic() +
-      facet_wrap(~Cultivar) +
-      stat_compare_means(method = "t.test", label = "p.signif", 
-                                            comparisons = list(c("NTC", "Fg"), 
-                                                               c("Fg", "Fg + 37"), 
-                                                               c("Fg + 37", "Fg + 40"), 
-                                                               c("Fg + 40", "Fg + 70")))               
-     X15ADONplot.pwc
+## b. 
+
+```{r}
+X15ADONplot.pwc <- ggplot(Mycotoxin_Data, aes(x = Treatment, y = X15ADON, fill = Cultivar)) +
+  geom_boxplot(outliers = F) + 
+  xlab("") + 
+  ylab("15ADON") + 
+  geom_point(alpha = 0.6, pch = 21, color = "black", position = position_jitterdodge()) +
+  scale_color_manual(values = c(cbbPalette[3], cbbPalette[4])) +
+  scale_fill_manual(values = c(cbbPalette[3], cbbPalette[4])) +
+  theme_classic() +
+  facet_wrap(~Cultivar) +
+  stat_compare_means(method = "t.test", label = "p.signif", 
+                                        comparisons = list(c("NTC", "Fg"), 
+                                                           c("Fg", "Fg + 37"), 
+                                                           c("Fg + 37", "Fg + 40"), 
+                                                           c("Fg + 40", "Fg + 70")))               
+ X15ADONplot.pwc
+```
+
 
 ## c.
 
-`{r}  Seed.massplot.pwc <- ggplot(Mycotoxin_Data, aes(x = Treatment, y = MassperSeed_mg, fill = Cultivar)) +    geom_boxplot(outliers = F) +       xlab("") +     ylab("Seed Mass (mg)") +    geom_point(alpha = 0.6, pch = 21, color = "black", position = position_jitterdodge()) +   scale_color_manual(values = c(cbbPalette[3], cbbPalette[4])) +    scale_fill_manual(values = c(cbbPalette[3], cbbPalette[4])) +     theme_classic() +     facet_wrap(~Cultivar) +     stat_compare_means(method = "t.test", label = "p.signif",                              comparisons = list(c("NTC", "Fg"),                                          c("Fg", "Fg + 37"),                                            c("Fg + 37", "Fg + 40"),                                               c("Fg + 40", "Fg + 70")))`
+```{r}
+ Seed.massplot.pwc <- ggplot(Mycotoxin_Data, aes(x = Treatment, y = MassperSeed_mg, fill = Cultivar)) +
+   geom_boxplot(outliers = F) + 
+     xlab("") + 
+   ylab("Seed Mass (mg)") + 
+  geom_point(alpha = 0.6, pch = 21, color = "black", position = position_jitterdodge()) +
+  scale_color_manual(values = c(cbbPalette[3], cbbPalette[4])) +
+   scale_fill_manual(values = c(cbbPalette[3], cbbPalette[4])) +
+    theme_classic() +
+    facet_wrap(~Cultivar) +
+    stat_compare_means(method = "t.test", label = "p.signif", 
+                            comparisons = list(c("NTC", "Fg"), 
+                                        c("Fg", "Fg + 37"), 
+                                          c("Fg + 37", "Fg + 40"), 
+                                             c("Fg + 40", "Fg + 70")))
+```
 
 ## **Combining all plots with statistics**
 
-\`\`\`{r} Combineplot.pwc \<- ggarrange( DONplot.pwc, X15ADONplot.pwc,
-Seed.massplot.pwc, labels = c(“A”, “B”, “C”), nrow = 1, ncol = 3,
-common.legend = TRUE, legend = “bottom”)
-
+```{r}
+Combineplot.pwc <- ggarrange( DONplot.pwc,
+                                   X15ADONplot.pwc, 
+                       Seed.massplot.pwc, 
+                       labels = c("A", "B", "C"),
+                       nrow = 1,
+                       ncol = 3,
+                       common.legend = TRUE,
+                       legend = "bottom")
+                     
                      Combineplot.pwc
+```
 
-\`\`\`
