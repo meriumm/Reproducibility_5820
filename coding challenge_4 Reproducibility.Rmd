@@ -3,16 +3,16 @@ title: "Coding Challenge. 4"
 author: "Maryam Saeed Noor Fatima"
 date: "2025-02-25"
 output:
+  pdf_document: default
   md_document:
     variant: gfm
-  pdf_document: default
   word_document: default
   html_document: 
    toc: true
    toc_float: true
 ---
 
-# Coding Challenge 3
+# R Markdown coding Challenge.4
 
 ## **Q.No.3 (a)**
 

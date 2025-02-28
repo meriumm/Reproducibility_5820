@@ -1,4 +1,4 @@
-# Coding Challenge 3
+# Coding Challenge 4
 
 ## **Q.No.3 (a)**
 
@@ -25,8 +25,14 @@ library(knitr)
     ## .
     ## ├── coding challenge_4 Reproducibility.Rmd
     ## ├── coding-challenge_4-Reproducibility.html
+    ## ├── coding-challenge_4-Reproducibility.md
     ## ├── coding-challenge_4-Reproducibility.pdf
     ## ├── coding-challenge_4-Reproducibility.Rmd
+    ## ├── coding-challenge_4-Reproducibility_files
+    ## │   └── figure-gfm
+    ## │       ├── unnamed-chunk-6-1.png
+    ## │       ├── unnamed-chunk-7-1.png
+    ## │       └── unnamed-chunk-9-1.png
     ## ├── MycotoxinData.csv
     ## ├── README.html
     ## ├── README.md
