@@ -4,12 +4,12 @@ author: "Maryam Saeed Noor Fatima"
 date: "2025-02-25"
 output:
   pdf_document: default
-  md_document:
-    variant: gfm
-  word_document: default
   html_document: 
    toc: true
    toc_float: true
+  word_document: default
+  md_document:
+    variant: gfm
 ---
 
 # R Markdown coding Challenge.4
@@ -21,7 +21,7 @@ output:
 library(knitr)
 ```
 
-[link to my Markdown fil](README.md)
+[link to my Markdown fil](markdown_file/coding-challenge_4-Reproducibility.md)
 
 
 ### Clickable Link to the Manuscript

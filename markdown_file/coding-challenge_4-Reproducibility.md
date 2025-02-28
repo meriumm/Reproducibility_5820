@@ -1,4 +1,4 @@
-# Coding Challenge 4
+# R Markdown coding Challenge.4
 
 ## **Q.No.3 (a)**
 
@@ -36,7 +36,6 @@ library(knitr)
     ## ├── MycotoxinData.csv
     ## ├── README.html
     ## ├── README.md
-    ## ├── README.pdf
     ## └── Reproducibility_5820.Rproj
 
 ### Libraries
