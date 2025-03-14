@@ -3,10 +3,10 @@ title: "Data Wrangling"
 author: "Maryam Saeed"
 date: "2025-03-14"
 output:
-  md_document:
   html_document: default
-  variant: gfm
   pdf_document: default
+  variant: gfm
+  md_document:
   word_document: default
 ---
 
@@ -177,7 +177,6 @@ microbiome.fungi%>%
    pivot_wider(names_from = Fungicide, values_from = Mean)%>% #pivot to wider format
    mutate(diff.fungicide = C - F) #Calculating the difference between the means
 ```
-
 
 
 

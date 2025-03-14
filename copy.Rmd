@@ -3,8 +3,8 @@ title: "Data Wrangling"
 author: "Maryam Saeed"
 date: "2025-03-14"
 output:
-  md_document:
   html_document: default
+  md_document:
   variant: gfm
   pdf_document: default
   word_document: default
@@ -167,12 +167,14 @@ microbiome.fungi%>%
  summarise(Mean = mean(richness))%>%     #Calculate the mean per treatment and fungicide
    pivot_wider(names_from = Fungicide, values_from = Mean) #pivot to wider format
 ```
+
 Difference between fungicide and control now
 
 ```{r}
 microbiome.fungi%>%
- select(SampleID, Crop, Compartment: Fungicide, richness) %>%
-  group_by(Treatment, Fungicide) %>% #grouping to later calculate summary stats by group
+  select(SampleID,Crop, Compartment:Fungicide, richness) %>%
+  group_by(Treatment, Fungicide) %>% #grouping to later calculate summary stats by
+  group
  summarise(Mean = mean(richness))%>%     #Calculate the mean per treatment and fungicide
    pivot_wider(names_from = Fungicide, values_from = Mean)%>% #pivot to wider format
    mutate(diff.fungicide = C - F) #Calculating the difference between the means
