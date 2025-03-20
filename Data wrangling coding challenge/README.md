@@ -1,0 +1,183 @@
+---
+title: "Data Wrangling"
+author: "Maryam Saeed"
+date: "2025-03-14"
+output:
+  md_document:
+  html_document: default
+  variant: gfm
+  pdf_document: default
+  word_document: default
+---
+
+```{r}
+library(tidyverse)
+```
+```{r}
+library(readr)
+microbiome.fungi <- read.csv("Bull_richness.csv")
+str(microbiome.fungi)
+```
+
+
+####'select()'
+```{r}
+microbiome.fungi2<- select(microbiome.fungi, SampleID, Crop, Compartment: Fungicide, richness)
+
+```
+
+####'filter()'
+```{r}
+head(filter(microbiome.fungi2, Treatment =="Conv."))
+
+# A more complex using &
+head(filter(microbiome.fungi2, Treatment == "Conv." & Fungicide == "C"))
+
+#Another more complex example using or |
+head(filter(microbiome.fungi2, Sample == "A" | Sample == "B")) # Samples A or B
+```
+#### 'mutate()'
+
+Mutate allow us to quickly create new columns
+```{r}
+microbiome.fungi2$logRich<- log(microbiome.fungi2$richness)
+#Create a new column called logRich
+head(mutate(microbiome.fungi2, logRich = log(richness)))
+
+#Create a new Column which combine crop and treatment
+head(mutate(microbiome.fungi2, Crop_Treatment = paste(Crop, Treatment)))
+```
+
+#### 'pipe()'
+
+we will combine all the previous steps into one large string of functions.
+The data from the previous step is transfered to the next step.
+
+```{r}
+microbiome.fungi %>%
+  select(SampleID, Crop, Compartment: Fungicide, richness) %>% #selecting columns
+  filter(Treatment =="Conv.")%>% #sub-setting to only include the conventional treatment
+  mutate(logRich = log(richness)) %>% #creating a new column of the log richness
+  head() #displaying the first six rows
+```
+#### 'summarize()'
+we can use 'summarise()' function to find things like mean and standard deviations/errors.
+
+```{r}
+microbiome.fungi %>%
+  select(SampleID, Crop, Compartment: Fungicide, richness) %>% #selecting columns
+  filter(Treatment =="Conv.")%>% #sub-setting to only include the conventional treatment
+  mutate(logRich = log(richness)) %>% #creating a new column of the log richness
+  summarise(Mean.rich = mean(logRich)) #Calculating the overall mean log richness within the conventionally managed treatment
+```
+
+we can also connect multiple summary statistics here.
+
+```{r}
+microbiome.fungi %>%
+  select(SampleID, Crop, Compartment: Fungicide, richness) %>% #selecting columns
+  filter(Treatment =="Conv.")%>% #sub-setting to only include the conventional treatment
+  mutate(logRich = log(richness)) %>% #creating a new column of the log richness
+  summarise(Mean.rich = mean(logRich), 
+          n = n(),
+          sd.dv = sd(logRich)) %>%
+  mutate(std.err = sd.dv/sqrt(n))  #Calculating the mean richness, standard deviation nd standard error
+```
+
+In the order to see summart statistics by group! we can do that using 'group_by()' function.
+```{r}
+microbiome.fungi %>%
+  select(SampleID, Crop, Compartment: Fungicide, richness) %>% #selecting columns
+  group_by(Treatment, Fungicide)%>% #grouping the treatment and fungicide to later calculate summary stats by the group
+  mutate(logRich = log(richness)) %>% #creating a new column of the log richness
+  summarise(Mean.rich = mean(logRich), 
+          n = n(),
+          sd.dv = sd(logRich)) %>%
+  mutate(std.err = sd.dv/sqrt(n))  #Calculating the mean richness, standard deviation nd standard error
+```
+
+Adding a ggplot
+
+```{r}
+microbiome.fungi %>%
+  select(SampleID, Crop, Compartment: Fungicide, richness) %>% #selecting columns
+  group_by(Treatment, Fungicide)%>% #grouping the treatment and fungicide to later calculate summary stats by the group
+  mutate(logRich = log(richness)) %>% #creating a new column of the log richness
+  summarise(Mean.rich = mean(logRich), 
+          n = n(),
+          sd.dv = sd(logRich)) %>%
+  mutate(std.err = sd.dv/sqrt(n))  %>%
+  ggplot(aes(x= Fungicide, y = Mean.rich))+   #adding a ggplot
+  geom_bar(stat = "identity")+
+  geom_errorbar(aes(x= Fungicide, ymin = Mean.rich, ymax = Mean.rich+ std.err), width = 0.4)+
+  theme_minimal()+
+  xlab("")+
+  ylab("Log Richness")+
+  facet_wrap(~ Treatment)
+```
+
+#### Joining
+
+We can do match up of data by rows using joining function
+
+ -left_join()
+    - Keep all rows of x and add matching row from y. Any row that dont match x will be excluded.
+    
+  -right_join
+     - reverse of left join()
+     
+  -inner_join()
+     - only keep rows that are common to both X and Y
+     
+  -fully_join()
+     - Keep any columns that are in either X or Y
+
+We have to create a metadata and taxonomy using 'sample()' function
+
+```{r}
+#Select just richness and sample ID
+richness<- microbiome.fungi %>%
+  select(SampleID, richness)
+
+#Selecting columns that dont include the richness
+metadata<- microbiome.fungi %>%
+  select(SampleID, Fungicide, Crop, Compartment, GrowthStage, Treatment, Rep, Sample)
+
+head(metadata)
+head(richness)
+
+head(left_join(metadata, richness, by = "SampleID")) #Adding richness data to metadata on the common column of the sample ID
+```
+#### Pivoting
+It convert wide to long format data and back again. we can do that using 'pivot_longer()'
+and 'pivot_wider()'
+Our data is wide format we will convert it into long format
+
+```{r}
+microbiome.fungi%>%
+  select(SampleID,Crop, Compartment:Fungicide, richness) %>%
+  group_by(Treatment, Fungicide) %>% #grouping to later calculate summary stats by group
+  summarise(Mean = mean(richness)) #Calculate the mean per treatment and fungicide
+```
+
+```{r}
+microbiome.fungi%>%
+  select(SampleID,Crop, Compartment:Fungicide, richness) %>%
+  group_by(Treatment, Fungicide) %>% #grouping to later calculate summary stats by group
+ summarise(Mean = mean(richness))%>%     #Calculate the mean per treatment and fungicide
+   pivot_wider(names_from = Fungicide, values_from = Mean) #pivot to wider format
+```
+Difference between fungicide and control now
+
+```{r}
+microbiome.fungi%>%
+ select(SampleID, Crop, Compartment: Fungicide, richness) %>%
+  group_by(Treatment, Fungicide) %>% #grouping to later calculate summary stats by group
+ summarise(Mean = mean(richness))%>%     #Calculate the mean per treatment and fungicide
+   pivot_wider(names_from = Fungicide, values_from = Mean)%>% #pivot to wider format
+   mutate(diff.fungicide = C - F) #Calculating the difference between the means
+```
+
+
+
+
