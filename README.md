@@ -181,7 +181,7 @@ microbiome.fungi%>%
 
 ---
 title: "Coding Challenge 6"
-author: "Maryam Saeed Noor Fatime"
+author: "Maryam Saeed Noor Fatima"
 date: "2025-03-27"
 output:
   word_document: default
@@ -242,13 +242,15 @@ haversine_distance <- function(lat1, lon1, lat2, lon2){
  rad.lon2<- lon2 * pi/180
  delta_lat<- rad.lat2 - rad.lat1   # Haversine formula
  delta_lon<- rad.lon2 - rad.lon1
-  a<- sin(delta_lat/2)^2 + cos(rad.lat1) * sin(delta_lon/2)^2
-  c<-2 *asin(sqrt(a))
+  a <- sin(delta_lat / 2)^2 + cos(rad.lat1) * cos(rad.lat2) * sin(delta_lon / 2)^2
+c <- 2 * asin(sqrt(a)) 
 earth_radius<- 6378137    # Earth radius in kilometer
 distance_km<- (earth_radius * c)/1000 # final distance in kilometer
 return(distance_km)
 }
 ```
+
+
 
 # Q.No.5(a)
 
@@ -322,7 +324,21 @@ head(distance_df)
 
 # Q.No.7 Adding a link to my github
 
-(Github account)[https://github.com/meriumm/Reproducibility_5820.git]
+(Github_Link)[https://github.com/meriumm/Reproducibility_5820.git]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
