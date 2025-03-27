@@ -1,6 +1,6 @@
 ---
 title: "Coding Challenge 6"
-author: "Maryam Saeed"
+author: "Maryam Saeed Noor Fatima"
 date: "2025-03-27"
 output:
   word_document: default

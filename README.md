@@ -179,5 +179,150 @@ microbiome.fungi%>%
 ```
 
 
+---
+title: "Coding Challenge 6"
+author: "Maryam Saeed Noor Fatime"
+date: "2025-03-27"
+output:
+  word_document: default
+  html_document: default
+md_document:
+  variant: gfm
+---
+
+# Q.No.1
+
+### Writing function and iteration helps to do repetative tasks and save alot of time it allow copy pasting and make the script easy to read and use
+
+
+# Q.No.2
+**To write function**
+
+### To write a function we use function() keyword to perform a task. then function() take the input arguments and return the results by applying results().
+
+**To write a loop**
+
+### in the order to make a loop we use for and put i as a iteration in the data and then print i. In this way same code run for each one
+
+
+
+```{r}
+### How to write a function in R
+F_to_C <- function(f_temp){     # Example of writing a function
+  Celcius<- (5*(f_temp -32)/9)
+  return(Celcius)
+}
+
+F_to_C(80)
+```
+
+```{r}
+for(i in -10:10){           # writing a for loop function in R
+  result<- F_to_C (i)
+  print(result)
+}
+```
+
+### syntax to write code and how codes are returned
+#### function(argumnet){(code of operation) return(results)}
+
+# Q.No.3 Read in cities.csv file using a relative path
+
+```{r}
+cities <- read.csv("Cities.csv")
+head(cities)
+```
+# Q.No.4
+
+```{r}
+haversine_distance <- function(lat1, lon1, lat2, lon2){
+ rad.lat1 <- lat1 * pi/180   # converting degrees to radians
+ rad.lon1 <- lon1 * pi/180
+ rad.lat2<- lat2* pi/180
+ rad.lon2<- lon2 * pi/180
+ delta_lat<- rad.lat2 - rad.lat1   # Haversine formula
+ delta_lon<- rad.lon2 - rad.lon1
+  a<- sin(delta_lat/2)^2 + cos(rad.lat1) * sin(delta_lon/2)^2
+  c<-2 *asin(sqrt(a))
+earth_radius<- 6378137    # Earth radius in kilometer
+distance_km<- (earth_radius * c)/1000 # final distance in kilometer
+return(distance_km)
+}
+```
+
+# Q.No.5(a)
+
+```{r}
+# filter for newyork city and auburn
+library(dplyr)
+nyc<- cities %>% filter(city == "New York") 
+auburn<- cities %>% filter(city == "Auburn")
+
+# Extracting just latitude and longitude values
+lat1<- nyc$lat
+lon1<- nyc$long
+
+lat2<- auburn$lat
+lon2<- auburn$long
+
+# Putting the inputs in the function
+haversine_distance( lat1, lon1, lat2, lon2)
+```
+
+# Q.No.5(b)
+
+```{r}
+haversine_distance( lat1, lon1, lat2, lon2)
+```
+
+# Q.No.6
+
+```{r}
+# loops to calculate distance from auburn to each city
+for(i in 1:nrow(cities)){
+  if(cities$city[1] != "Auburn"){
+    lat1<- cities$lat[i]
+    lon1<- cities$long[i]
+    
+    dist<- haversine_distance(lat1, lon1, lat2, lon2)
+    print(dist)
+  }
+}
+```
+
+
+# Work for bonus point
+
+```{r}
+# creating a empty data frame to store results
+distance_df<- data.frame(city1 = character(),
+                         city2 = character(),
+                         distance_km = numeric())
+# Loop through each city
+for(i in 1:nrow(cities)){
+  if(cities$city[i] != "Auburn"){
+    lat1<- cities$lat[i]
+    lon1<- cities$long[i]
+# calculating the distance
+    dist<- haversine_distance(lat1, lon1, lat2, lon2)
+    
+# Adding results as new row
+    new_row<- data.frame(city1 = cities$city[i],
+                         city2 = "Auburn",
+                         distance_km = dist)
+    
+    distance_df<- rbind(distance_df, new_row)
+  }
+  
+}
+
+# first six rows of the data frame
+head(distance_df)
+```
+
+# Q.No.7 Adding a link to my github
+
+(Github account)[https://github.com/meriumm/Reproducibility_5820.git]
+
 
 
