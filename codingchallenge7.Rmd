@@ -1,0 +1,110 @@
+---
+title: "Coding _Challenge_7"
+author: "Maryam Saeed Noor Fatima"
+date: "2025-04-02"
+output:
+  word_document: 
+    toc: TRUE
+  html_document: 
+  md_document:
+    variant: gfm
+---
+
+# **Q.No.1** 
+
+```{r}
+library(readr)
+library(tidyverse)
+library(lme4)
+library(emmeans)
+library(multcomp)
+library(multcompView)
+plantemergence <- read_csv("PlantEmergence.csv")
+head(plantemergence)
+plantemergence$Treatment<- as.factor(plantemergence$Treatment) # converting into factor
+plantemergence$DaysAfterPlanting<- as.factor(plantemergence$DaysAfterPlanting)
+plantemergence$Rep<- as.factor(plantemergence$Rep)
+```
+
+# **Q.No.2**
+
+```{r}
+results_lm <- lm(Emergence ~ Treatment * DaysAfterPlanting, data = plantemergence)
+
+summary(results_lm) # getting the summary
+anova(results_lm)   # getting the anova
+```
+
+
+
+# **Q.No.3**
+
+Interacation term p value indicate p = 1 therefore we dont need to include interaction term in our model.
+
+```{r}
+simple_lm<- lm(Emergence ~ Treatment + DaysAfterPlanting, data = plantemergence)
+summary(simple_lm) # summary of simple linear model
+anova(simple_lm) # anova results
+```
+
+## **interpretation**
+we found that treatment 2 resulted in 134.531 less plant emergence as compared to treatment 1 (p = < 2e-16).
+
+
+# **Q.No.4**
+
+```{r}
+#calculating the least square mean of the treatment
+lsmeans_treatment <- emmeans(simple_lm, ~ Treatment) # least quare mean for treatment
+cld(lsmeans_treatment, alpha = 0.05, Letters = letters) # Tukey test
+```
+
+# **Q.No.5**
+
+## Making graph and adding letters in the graph
+
+```{r}
+plot_cldbars_onefactor <- function(lm_model, factor) {
+  data <- lm_model$model
+  variables <- colnames(lm_model$model)
+  dependent_var <- variables[1]
+  independent_var <- variables[2:length(variables)]
+
+  lsmeans <- emmeans(lm_model, as.formula(paste("~", factor))) # estimate lsmeans 
+  Results_lsmeans <- cld(lsmeans, alpha = 0.05, reversed = TRUE, details = TRUE, Letters = letters) # Tukey HSD
+  sig.diff.letters <- data.frame(Results_lsmeans$emmeans[,1], 
+                                 str_trim(Results_lsmeans$emmeans[,7]))
+  colnames(sig.diff.letters) <- c(factor, "Letters")
+  
+  ave_stand2 <- lm_model$model %>%
+    group_by(!!sym(factor)) %>%
+    dplyr::summarize(
+      ave.emerge = mean(.data[[dependent_var]], na.rm = TRUE),
+      se = sd(.data[[dependent_var]]) / sqrt(n())
+    ) %>%
+    left_join(sig.diff.letters, by = factor) %>%
+    mutate(letter_position = ave.emerge + 10 * se)
+  
+  plot <- ggplot(data, aes(x = !! sym(factor), y = !! sym(dependent_var))) + 
+    stat_summary(fun = mean, geom = "bar") +
+    stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +
+    ylab("Number of emerged plants") + 
+    geom_jitter(width = 0.02, alpha = 0.5) +
+    geom_text(data = ave_stand2, aes(label = Letters, y = letter_position), size = 5) +
+    xlab(as.character(factor)) +
+    theme_classic()
+  
+  return(plot)
+}
+
+# Now call the function using your model
+plot_cldbars_onefactor(simple_lm, "Treatment")
+
+```
+
+
+# **Q.No.6**
+
+[link to GitHub](https://github.com/meriumm/Reproducibility_5820.git)
+
+
